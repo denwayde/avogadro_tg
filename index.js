@@ -3,7 +3,7 @@ import { Telegraf, Markup } from 'telegraf'
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.start(async (ctx) => {
+bot.start(async(ctx) => {
     await ctx.reply(
         'Привет! Нажмите на кнопку ниже, чтобы открыть веб-приложение:',
         Markup.keyboard([
@@ -12,5 +12,15 @@ bot.start(async (ctx) => {
         .resize()
     );
 });
+
+bot.on("message", async (ctx) => {
+    console.log(ctx.message.web_app_data)
+    await ctx.reply(ctx.message.web_app_data.data) 
+  
+  });
+//   {
+//     button_text: 'Заполнить заявку',
+//     data: '{"name":"Динис Гибадуллин","phone":"89603827499","email":"denwayde09@gmail.com","selectValue":"2"}'
+//   }
 
 bot.launch();
