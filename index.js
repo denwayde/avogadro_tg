@@ -1,5 +1,6 @@
 import dotenv from 'dotenv/config'
 import { Telegraf, Markup } from 'telegraf'
+import connection from './db.js';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -15,6 +16,7 @@ bot.start(async(ctx) => {
 
 bot.on("message", async (ctx) => {
     console.log(ctx.message.web_app_data)
+    await connection.execute("INSERT INTO students (username, phone, email, course_id) VALUES (?,?,?,?)", [Object.values(JSON.parse(ctx.message.web_app_data.data))])
     await ctx.reply(ctx.message.web_app_data.data) 
   
   });
