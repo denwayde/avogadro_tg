@@ -15,10 +15,16 @@ bot.start(async(ctx) => {
 });
 
 bot.on("message", async (ctx) => {
-    console.log(ctx.message.web_app_data)
-    await connection.execute("INSERT INTO students (username, phone, email, course_id) VALUES (?,?,?,?)", [Object.values(JSON.parse(ctx.message.web_app_data.data))])
-    await ctx.reply(ctx.message.web_app_data.data) 
-  
+    console.log(Object.values(JSON.parse(ctx.message.web_app_data.data)))
+    // console.log(ctx.message.web_app_data)
+    try {
+        await connection.execute("INSERT INTO students (username, phone, email, course_id) VALUES (?,?,?,?)", [...Object.values(JSON.parse(ctx.message.web_app_data.data))])
+
+    } catch (error) {
+        console.log("cant save student "+ error)
+    }
+    await ctx.reply(ctx.message.web_app_data.data)
+
   });
 //   {
 //     button_text: 'Заполнить заявку',

@@ -27,7 +27,7 @@ const dbConfig = {
   }
   
   // Инициализация соединения
-  initializeDatabaseConnection();
+  await initializeDatabaseConnection();
   
   // Экспортируем соединение
   export default connection;
