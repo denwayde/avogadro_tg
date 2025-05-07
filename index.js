@@ -39,7 +39,11 @@ bot.on(message('web_app_data'), async (ctx) => {
             } catch (error) {
                 console.log("cant save student "+ error)
             }
-            await ctx.reply("💥 Спасибо большое за заявку! 💥\nМы скоро свяжемся с вами.\nЖелаем отличного дня и прекрасного настроения! 😊🌞")
+            await ctx.reply("💥 Спасибо большое за заявку! 💥\nМы скоро свяжемся с вами.\nЖелаем отличного дня и прекрасного настроения! 😊🌞", Markup.keyboard([
+                [Markup.button.webApp('Заполнить заявку', 'https://avogadro-online-school.netlify.app')]
+
+            ])
+            .resize())
             setTimeout(async ()=>{
                 await bot.telegram.sendMessage(process.env.ADMIN_ID, `Новая заявка:\n${application_str}`, 
                     // {
@@ -58,6 +62,13 @@ bot.on(message('web_app_data'), async (ctx) => {
     }
 
   });
+
+//   bot.on('Наши контакты', async (ctx) => {
+//     //const data = await ctx.callbackQuery.data
+//     await ctx.reply('+79196089090 - Динис Рафикович\n+79174150006 - Александр Шамилевич')
+//     // 
+//     await ctx.answerCbQuery()
+//   })
 
 //   bot.on('callback_query', async (ctx) => {
 //     const data = await ctx.callbackQuery.data.split("_"); // tut delaem massiv iz dati
