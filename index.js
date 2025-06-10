@@ -151,7 +151,7 @@ function setupBotHandlers() {
               reply_markup: {
                 inline_keyboard: [
                   [
-                    { text: '📲 Оставить заявку', url: `https://t.me/@avogadro_online_school_bot` },
+                    { text: '📲 Оставить заявку', url: `https://t.me/avogadro_online_school_bot` },
                     { text: '🌐 Мы в VK', url: 'https://vk.com/avogadro_school' }
                   ]
                 ]
@@ -166,7 +166,7 @@ function setupBotHandlers() {
               reply_markup: {
                 inline_keyboard: [
                   [
-                    { text: '📲 Оставить заявку', url: `https://t.me/@avogadro_online_school_bot` },
+                    { text: '📲 Оставить заявку', url: `https://t.me/avogadro_online_school_bot` },
                     { text: '🌐 Мы в VK', url: 'https://vk.com/avogadro_school' }
                   ]
                 ]
