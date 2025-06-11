@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 const corsOptions = {
     origin: [
       'http://localhost:3000', // Для разработки
-      'https://avogadro-online-school.netlify.app', // Продакшен
+      'https://avogadro-online-school.netlify.app' // Продакшен
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
