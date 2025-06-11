@@ -5,11 +5,11 @@ import { open } from 'sqlite';
 import axios from 'axios';
 import express from 'express';
 import bodyParser from 'body-parser';
-
+import cors from 'cors'
 // Инициализация Express приложения
 const app = express();
 app.use(bodyParser.json());
-
+app.use(cors())
 // Инициализация бота Telegram
 const bot = new TelegramBot(process.env.BOT_TOKEN, {polling: true});
 const TELEGRAM_CHANNEL = '@avogadro_school';
