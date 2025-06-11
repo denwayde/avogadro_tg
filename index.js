@@ -5,24 +5,16 @@ import { open } from 'sqlite';
 import axios from 'axios';
 import express from 'express';
 import bodyParser from 'body-parser';
-// import cors from 'cors'
+import cors from 'cors'
 // Инициализация Express приложения
 const app = express();
+
+app.use(cors({
+    origin: 'http://localhost:3000'
+  }));
+  
 app.use(bodyParser.json());
 
-// // Настройка CORS
-// app.use(cors({
-//     origin: (origin, callback) => {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error('Not allowed by CORS'));
-//       }
-//     },
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type', 'Authorization']
-//   }));
 
 // Инициализация бота Telegram
 const bot = new TelegramBot(process.env.BOT_TOKEN, {polling: true});
