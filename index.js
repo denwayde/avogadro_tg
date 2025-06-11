@@ -9,7 +9,21 @@ import cors from 'cors'
 // Инициализация Express приложения
 const app = express();
 app.use(bodyParser.json());
-app.use(cors())
+
+// Настройка CORS
+const corsOptions = {
+    origin: [
+      'http://localhost:3000', // Для разработки
+      'https://avogadro-online-school.netlify.app', // Продакшен
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  };
+app.use(cors(corsOptions))
+// Для preflight-запросов
+app.options('*', cors(corsOptions));
+
 // Инициализация бота Telegram
 const bot = new TelegramBot(process.env.BOT_TOKEN, {polling: true});
 const TELEGRAM_CHANNEL = '@avogadro_school';
