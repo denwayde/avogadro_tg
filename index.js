@@ -11,18 +11,18 @@ const app = express();
 app.use(bodyParser.json());
 
 // Настройка CORS
-const corsOptions = {
-    origin: [
-      'http://localhost:3000', // Для разработки
-      'https://avogadro-online-school.netlify.app' // Продакшен
-    ],
+app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  };
-app.use(cors(corsOptions))
-// Для preflight-запросов
-app.options('*', cors(corsOptions));
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 
 // Инициализация бота Telegram
 const bot = new TelegramBot(process.env.BOT_TOKEN, {polling: true});
