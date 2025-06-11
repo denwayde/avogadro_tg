@@ -198,33 +198,46 @@ function setupBotHandlers() {
   });
 
   // Обработчик web_app_data
-  bot.on('message', async (msg) => {
-    if (msg.web_app_data) {
-      const chatId = msg.chat.id;
-      let application = Object.values(JSON.parse(msg.web_app_data.data));
-      let phone;
-      let application_list = application.map(
-        (i, index) => {
-          if(index === 1) {
-            if (typeof i === 'string' && i.startsWith('8')) {
-              i = '+7' + i.slice(1);
-              phone = i;
-            }
-          }
-          return i + '\n';
-        }
+  // Обработчик web_app_data (исправленная версия)
+bot.on('message', async (msg) => {
+    if (!msg.web_app_data) return;
+  
+    const chatId = msg.chat.id;
+    let application;
+    
+    try {
+      application = JSON.parse(msg.web_app_data.data);
+    } catch (e) {
+      console.error('Ошибка парсинга данных:', e);
+      return;
+    }
+  
+    // Форматируем данные заявки
+    const applicationData = [
+      `Имя: ${application.username || 'не указано'}`,
+      `Телефон: ${formatPhone(application.phone)}`,
+      `Email: ${application.email || 'не указано'}`,
+      `Курс: ${application.course_name || 'не указано'}`,
+      `Формат: ${application.format || 'не указано'}`
+    ];
+  
+    const applicationStr = applicationData.join('\n');
+  
+    try {
+      // Сохраняем в базу
+      await db.run(
+        "INSERT INTO students (username, phone, email, course_name, format, telega_id) VALUES (?, ?, ?, ?, ?, ?)", 
+        [
+          application.username,
+          formatPhone(application.phone),
+          application.email,
+          application.course_name,
+          application.format,
+          chatId
+        ]
       );
-      let application_str = application_list.join("");
-      
-      try {
-        await db.run(
-          "INSERT INTO students (username, phone, email, course_name, format, telega_id) VALUES (?, ?, ?, ?, ?, ?)", 
-          [...application_list, chatId]
-        );
-      } catch (error) {
-        console.log("Ошибка при сохранении студента:", error);
-      }
-      
+  
+      // Отправляем благодарность (только один раз)
       await bot.sendMessage(
         chatId,
         "💥 Спасибо большое за заявку! 💥\nМы скоро свяжемся с вами.\nЖелаем отличного дня и прекрасного настроения! 😊🌞",
@@ -240,12 +253,27 @@ function setupBotHandlers() {
           }
         }
       );
-      
-      setTimeout(async () => {
-        await bot.sendMessage(ADMIN_ID, `Новая заявка:\n${application_str}`);
-      }, 1000);
+  
+      // Уведомляем админа
+      try {
+        await bot.sendMessage(ADMIN_ID, `Новая заявка:\n${applicationStr}`);
+      } catch (adminError) {
+        console.error('Ошибка отправки админу:', adminError);
+      }
+  
+    } catch (error) {
+      console.error("Ошибка при сохранении заявки:", error);
     }
   });
+  
+  // Функция форматирования телефона
+  function formatPhone(phone) {
+    if (!phone) return 'не указан';
+    if (typeof phone === 'string' && phone.startsWith('8')) {
+      return '+7' + phone.slice(1);
+    }
+    return phone;
+  }
 
   // Обработчик inline кнопки отмены
   bot.on('callback_query', async (query) => {
